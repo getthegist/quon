@@ -65,7 +65,9 @@ class RunText(SampleBase):
 
                 if game_name == "Just Chatting":
                     game_name = "Just Stalling"
+
                 len = graphics.DrawText(offscreen_canvas, font_large, pos, 14, textColor, game_name)
+
                 pos = pos - 1
                 if pos + len <= 0:
                     pos = offscreen_canvas.width
