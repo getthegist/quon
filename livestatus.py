@@ -3,6 +3,7 @@
 from samplebase import SampleBase
 from rgbmatrix import graphics
 import time
+import datetime
 from twitch import Twitch
 import configparser
 import os
@@ -17,6 +18,9 @@ class RunText(SampleBase):
         config_filename = 'config.ini'
         config = configparser.ConfigParser()
         config.read(config_filename)
+        check_interval = config.getint('settings', 'check-interval')
+        brightness = config.getint('settings', 'brightness')
+
         client_id = config['twitch']['client-id']
         client_bearer = config.get('twitch', 'bearer', fallback=None)
         client_secret = config.get('twitch', 'secret', fallback=None)
@@ -24,7 +28,6 @@ class RunText(SampleBase):
         if client_bearer is None and client_secret is None:
             raise Exception("If no bearer token is provided, an API secret key is needed to retrieve a bearer token.")
 
-        check_interval = config.getint('settings', 'check-interval')
         streamer = config.get('twitch', 'streamer')
 
         twitch = Twitch(client_id, bearer=client_bearer)
@@ -53,16 +56,21 @@ class RunText(SampleBase):
             is_online = stream_info['is_live']
             offscreen_canvas.Clear()
             if is_online:
-                offscreen_canvas.brightness = 10
+                offscreen_canvas.brightness = brightness
                 textColor = graphics.Color(0, 255, 0)
                 game_name = stream_info['game_name']
+                stream_start = stream_info['started_at']
+
+                stream_duration = datetime.datetime.utcnow() - datetime.datetime.strptime(stream_start, "%Y-%m-%dT%H:%M:%SZ")
+
                 if game_name == "Just Chatting":
-                    game_name = "Stalling"
-                len = graphics.DrawText(offscreen_canvas, font_large, pos, 16, textColor, game_name)
+                    game_name = "Just Stalling"
+                len = graphics.DrawText(offscreen_canvas, font_large, pos, 14, textColor, game_name)
                 pos = pos - 1
                 if pos + len <= 0:
                     pos = offscreen_canvas.width
-                graphics.DrawText(offscreen_canvas, font, 0, 6, textColor, "LIVE")
+                #graphics.DrawText(offscreen_canvas, font, 0, 6, textColor, "LIVE")
+                graphics.DrawText(offscreen_canvas, font, 3, 5, graphics.Color(127, 127, 255), str(stream_duration))
                 offsecreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
                 time.sleep(0.05)
             else:
