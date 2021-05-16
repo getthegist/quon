@@ -15,7 +15,7 @@ class RunText(SampleBase):
 
     def run(self):
         font_dir = "{}/../../../fonts/".format(os.path.dirname(os.path.realpath(__file__)))
-        config_filename = 'config.ini'
+        config_filename = "{}/config.ini".format(os.path.dirname(os.path.realpath(__file__)))
         config = configparser.ConfigParser()
         config.read(config_filename)
         check_interval = config.getint('settings', 'check-interval')
