@@ -1,0 +1,9 @@
+[twitch]
+client-id = <client_id_here>
+secret = <api_secret_here_if_no_bearer_token>
+streamer = quin69
+bearer = <bearer_token>
+
+[settings]
+check-interval = 60
+
