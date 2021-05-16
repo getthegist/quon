@@ -4,8 +4,10 @@ Taken from:
 
 Install the libraries:
 
-```curl https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/rgb-matrix.sh >rgb-matrix.sh
-sudo bash rgb-matrix.sh```
+```
+curl https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/rgb-matrix.sh >rgb-matrix.sh
+sudo bash rgb-matrix.sh
+```
 
 Copy the files in this repo to /rpi-rgb-led-matrix/bindings/python/samples
 
