@@ -7,7 +7,7 @@ import datetime
 from twitch import Twitch
 import configparser
 import os
-
+import math
 
 class RunText(SampleBase):
     def __init__(self, *args, **kwargs):
@@ -20,6 +20,7 @@ class RunText(SampleBase):
         config.read(config_filename)
         check_interval = config.getint('settings', 'check-interval')
         brightness = config.getint('settings', 'brightness')
+        show_offline_clock = config.getboolean('settings', 'show-offline-clock')
 
         client_id = config['twitch']['client-id']
         client_bearer = config.get('twitch', 'bearer', fallback=None)
@@ -44,6 +45,8 @@ class RunText(SampleBase):
         font.LoadFont("{}4x6.bdf".format(font_dir))
         font_large = graphics.Font()
         font_large.LoadFont("{}7x13.bdf".format(font_dir))
+        font_medium = graphics.Font()
+        font_medium.LoadFont("{}6x13.bdf".format(font_dir))
         textColor = graphics.Color(255, 255, 0)
         pos = offscreen_canvas.width
         feed_check_time = 0
@@ -71,7 +74,6 @@ class RunText(SampleBase):
                 pos = pos - 1
                 if pos + len <= 0:
                     pos = offscreen_canvas.width
-                #graphics.DrawText(offscreen_canvas, font, 0, 6, textColor, "LIVE")
                 graphics.DrawText(offscreen_canvas, font, 3, 5, graphics.Color(127, 127, 255), str(stream_duration))
                 offsecreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
                 time.sleep(0.05)
@@ -79,10 +81,13 @@ class RunText(SampleBase):
                 offscreen_canvas.brightness = 50
                 textColor = graphics.Color(255, 0, 0)
 
-                graphics.DrawText(offscreen_canvas, font, 0, 6, textColor, "OFFLINE")
+                graphics.DrawText(offscreen_canvas, font, 2, 6, textColor, "OFFLINE")
+                if show_offline_clock:
+                    current_datetime = datetime.datetime.now()
+                    graphics.DrawText(offscreen_canvas, font_medium, 2, 16, graphics.Color(0, 127, 0), current_datetime.strftime("%H:%M"))
 
                 offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
-                time.sleep(60)
+                time.sleep(1)
 
 
 # Main function

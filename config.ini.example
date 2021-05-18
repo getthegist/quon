@@ -7,3 +7,4 @@ bearer = <bearer_token>
 [settings]
 check-interval = 60
 brightness = 50
+show-offline-clock = true
